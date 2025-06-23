@@ -32,3 +32,27 @@ int removeDuplicates(vector<int> &nums)
     }
     return k + 1;
 }
+
+// REMOVE DUPLICATES FROM SORTED ARRAY II (LEETCODE 80)
+// USING TWO POINTERS APPROACH - TC=O(N), SC=O(1)
+
+// Steps:
+// 1. If array size is ≤ 2, return size directly (no excess duplicates).
+// 2. Use a pointer `k` to track the position to insert the next valid element.
+// 3. From index 2 onward, check if `nums[i] != nums[k-2]`:
+//    - If so, it's not a 3rd+ duplicate → keep it: assign to `nums[k]` and increment `k`.
+//    - Else, skip (it's an extra duplicate).
+// 4. Return `k` as the new length with at most 2 duplicates per element.
+
+int removeDuplicates(vector<int>& nums) {
+    int n=nums.size();
+    if(n<=2) return n;
+    int k=2;
+    for(int i=2;i<n;i++){
+        if(nums[i]!=nums[k-2]){
+            nums[k]=nums[i];
+            k++;
+        }
+    }
+    return k;
+}
