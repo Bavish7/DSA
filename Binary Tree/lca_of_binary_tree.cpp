@@ -43,6 +43,8 @@ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *p, TreeNode *q)
 }
 
 // KTH ANCESTOR OF A NODE IN BINARY TREE
+// USING RECURSION - TC=O(N), SC=O(H)
+
 // Steps:
 // 1. If root is NULL, return NULL.
 // 2. If root's data matches targetNodeVal, return root.
