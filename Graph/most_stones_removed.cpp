@@ -2,8 +2,49 @@
 using namespace std;
 
 // MOST STONES REMOVED WITH SAME ROW OR COLUMN (LEETCODE 947)
-// USING DISJOINT SET - TC=O(N), SC=O(N)
+// USING DFS TRAVERSAL - TC=O(N^2), SC=O(N)
 
+// Steps:
+// 1. Treat each stone as a node. An edge exists between two stones if they share the same row or column.
+// 2. Use DFS to find all stones connected to the current stone (same row or column).
+// 3. Each DFS marks one connected component. We can remove (component size - 1) stones from each component.
+// 4. Total removable stones = Total stones - Number of connected components.
+
+void dfs(int index, vector<vector<int>> &stones, int row, int col, vector<bool> &vis)
+{
+    vis[index] = true;
+    for (int i = 0; i < stones.size(); i++)
+    {
+        if (!vis[i])
+        {
+            int newRow = stones[i][0];
+            int newCol = stones[i][1];
+            if (newRow == row || newCol == col)
+            {
+                dfs(i, stones, newRow, newCol, vis);
+            }
+        }
+    }
+}
+int removeStones(vector<vector<int>> &stones)
+{
+    int n = stones.size();
+    vector<bool> vis(n, 0);
+    int count = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            int row = stones[i][0];
+            int col = stones[i][1];
+            dfs(i, stones, row, col, vis);
+            count++;
+        }
+    }
+    return n - count;
+}
+
+// USING DISJOINT SET - TC=O(N), SC=O(N)
 // Steps:
 // 1. Determine the maximum row and column values from the stone coordinates.
 // 2. Initialize a DisjointSet with a size large enough to handle both row and column nodes uniquely.
