@@ -2,8 +2,34 @@
 using namespace std;
 
 // BINARY SUBARRRAYS WITH SUM (LEETCODE 930)
-// USING VARIABLE SIZE WINDOW - TC=O(4N), SC=O(1)
+// USING PREFIX SUM AND UNORDERED MAP - TC=O(N), SC=O(N)
 
+// Steps:
+// 1. Initialize prefix sum (currSum) and hashmap (mp) to store frequency of prefix sums.
+// 2. mp[0] = 1 ensures subarrays starting from index 0 are counted if they meet the goal.
+// 3. Iterate through the array and keep updating currSum.
+// 4. If (currSum - goal) exists in mp, add its frequency to count (i.e., valid subarrays end at current index).
+// 5. Update mp[currSum] to reflect the current prefix sum's frequency.
+
+int numSubarraysWithSum(vector<int> &nums, int goal)
+{
+    int n = nums.size();
+    unordered_map<int, int> mp;
+    int count = 0, currSum = 0;
+    mp[0] = 1;
+    for (int &num : nums)
+    {
+        currSum += num;
+        if (mp.find(currSum - goal) != mp.end())
+        {
+            count += mp[currSum - goal];
+        }
+        mp[currSum]++;
+    }
+    return count;
+}
+
+// USING VARIABLE SIZE WINDOW - TC=O(4N), SC=O(1)
 // Steps:
 // 1. Define a helper function `solve` to count subarrays with a sum ≤ `goal`.
 //    - Use a sliding window approach with two pointers (`l` and `r`).
@@ -78,3 +104,4 @@ int numSubarraysWithSum(vector<int> &nums, int goal)
     }
     return count;
 }
+
