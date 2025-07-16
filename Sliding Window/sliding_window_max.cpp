@@ -35,7 +35,7 @@ vector<int> maxSlidingWindow(vector<int> &nums, int k)
     return ans;
 }
 
-// USING FIXED SIZE WINDOW - TC=O(N), SC=O(K)
+// USING FIXED SIZE WINDOW AND DEQUE- TC=O(N), SC=O(K)
 // Steps:
 // 1. Initialize a deque `q` to keep track of indices of potential maximum values in the current window.
 // 2. Initialize a vector `res` to store the maximum values of each window.
