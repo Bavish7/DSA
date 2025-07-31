@@ -66,3 +66,51 @@ int countPairs(TreeNode *root, int distance)
     }
     return count / 2;
 }
+
+// USING POSTORDER TRAVERSAL - TC=O(N*D^2), SC=O(N*D)
+// Steps:
+// 1. Use post-order DFS to collect distances of leaf nodes from the current node.
+// 2. At each node:
+//    - Get all valid distances from left and right subtrees.
+//    - Count all leaf pairs (left[i] + right[j] ≤ distance).
+// 3. Return a list of all current valid leaf distances (incremented by 1).
+// 4. Accumulate the count of good pairs during DFS traversal.
+// 5. Final count is the total number of leaf node pairs with valid distance.
+
+vector<int> solve(TreeNode *root, int &distance, int &count)
+{
+    if (!root)
+        return {0};
+    if (root->left == NULL && root->right == NULL)
+    {
+        return {1};
+    }
+    vector<int> left = solve(root->left, distance, count);
+    vector<int> right = solve(root->right, distance, count);
+    for (int &l : left)
+    {
+        for (int &r : right)
+        {
+            if (l != 0 && r != 0 && l + r <= distance)
+                count++;
+        }
+    }
+    vector<int> curr;
+    for (int &l : left)
+    {
+        if (l != 0 && l + 1 <= distance)
+            curr.push_back(l + 1);
+    }
+    for (int &r : right)
+    {
+        if (r != 0 && r + 1 <= distance)
+            curr.push_back(r + 1);
+    }
+    return curr;
+}
+int countPairs(TreeNode *root, int distance)
+{
+    int count = 0;
+    solve(root, distance, count);
+    return count;
+}
