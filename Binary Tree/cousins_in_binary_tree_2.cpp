@@ -2,7 +2,7 @@
 using namespace std;
 
 // COUSINS IN BINARY TREE II (LEETCODE 2641)
-// USING BFS TRAVERSAL - TC=O(N), SC=O(N)
+// USING 2 BFS TRAVERSALS - TC=O(N), SC=O(N)
 
 // Steps:
 // 1. Do BFS to compute total sum of nodes at each level → store in `levelSum`.
@@ -62,6 +62,53 @@ TreeNode *replaceValueInTree(TreeNode *root)
             }
         }
         j++;
+    }
+    return root;
+}
+
+// USING BFS TRAVERSAL - TC=O(N), SC=O(N)
+// Steps:
+// 1. Initialize queue with root and set `levelSum` to root's value.
+// 2. Traverse level by level using BFS:
+//    a. For each node, update its value as `levelSum - node->val`.
+//    b. Calculate `siblingSum` of its children.
+//    c. Update each child’s value to `siblingSum`.
+//    d. Add children to queue and accumulate their original values into `nextLevelSum`.
+// 3. After each level, update `levelSum` to `nextLevelSum`.
+// 4. Return updated tree root.
+
+TreeNode *replaceValueInTree(TreeNode *root)
+{
+    if (!root)
+        return NULL;
+    queue<TreeNode *> q;
+    q.push(root);
+    int levelSum = root->val;
+    while (!q.empty())
+    {
+        int n = q.size();
+        int nextLevelSum = 0;
+        for (int i = 0; i < n; i++)
+        {
+            TreeNode *front = q.front();
+            q.pop();
+            front->val = levelSum - front->val;
+            int siblingSum = front->left != NULL ? front->left->val : 0;
+            siblingSum += front->right != NULL ? front->right->val : 0;
+            if (front->left)
+            {
+                nextLevelSum += front->left->val;
+                front->left->val = siblingSum;
+                q.push(front->left);
+            }
+            if (front->right)
+            {
+                nextLevelSum += front->right->val;
+                front->right->val = siblingSum;
+                q.push(front->right);
+            }
+        }
+        levelSum = nextLevelSum;
     }
     return root;
 }
